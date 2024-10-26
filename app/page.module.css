@@ -1,6 +1,5 @@
 .firstBox {
   position: relative;
-  margin-top: 60px;
   background-color: #fff;
   height: 420px;
 }
@@ -16,15 +15,4 @@
   color: #ccc;
   font-size: 44px;
   margin-bottom: 64px;
-}
-
-.button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-  background-color: #6358ec;
-  color: white;
-  border: none;
-  border-radius: 8px;
 }

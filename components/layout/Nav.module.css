@@ -18,5 +18,6 @@
 }
 
 .list > li {
+  color: #393939;
   cursor: pointer;
 }
