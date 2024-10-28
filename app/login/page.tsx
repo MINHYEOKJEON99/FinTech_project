@@ -6,11 +6,13 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import app from '../firebase';
+import app, { db } from '../firebase';
 
 import Button from '@/components/UI/Button';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import { ref, set } from 'firebase/database';
 
 export default function Login() {
   // prettier-ignore
@@ -65,6 +67,12 @@ export default function Login() {
     setLoginInfo({ ...loginInfo, [e.target.name]: e.target.value });
   };
 
+  const onNaverLogin = async () => {
+    const res = await signIn('naver', {
+      redirect: true,
+      callbackUrl: '/',
+    });
+  };
   return (
     <main className={styles.wrapper}>
       <form onSubmit={onSubmit} className={styles.container}>
@@ -91,6 +99,11 @@ export default function Login() {
           <Button type="button" path="/signup" styles={styles.signupButton}>
             회원가입
           </Button>
+          <button
+            type="button"
+            className={styles.naver}
+            onClick={onNaverLogin}
+          ></button>
         </div>
         <div className={styles.img}></div>
       </form>

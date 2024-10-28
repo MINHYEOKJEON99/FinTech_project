@@ -4,11 +4,28 @@ import Link from 'next/link';
 import styles from './Nav.module.css';
 import app from '@/app/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useSession, signOut } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 export default function Nav() {
+  const { data: session } = useSession();
+  console.log(session);
   const auth = getAuth(app);
   const [loginState, setLoginState] = useState(false);
+  const [socialLoginState, setSocialLoginState] = useState(false);
+
+  useEffect(() => {
+    const login = () => {
+      if (session?.user) {
+        setSocialLoginState(true);
+      } else {
+        setSocialLoginState(false);
+      }
+    };
+    return () => {
+      login();
+    };
+  });
 
   useEffect(() => {
     const login = onAuthStateChanged(auth, (user) => {
@@ -23,8 +40,9 @@ export default function Nav() {
     };
   }, []);
 
-  const onClickLogOut = () => {
+  const onClickLogOut = async () => {
     auth.signOut();
+    await signOut({ redirect: true, callbackUrl: '/' });
     alert('로그아웃 되었습니다.');
   };
 
@@ -39,7 +57,7 @@ export default function Nav() {
             <Link href={'/community'}>게시판</Link>
           </li>
           <li>
-            {loginState ? (
+            {loginState || socialLoginState ? (
               <Link href={'/'} onClick={onClickLogOut}>
                 로그아웃
               </Link>

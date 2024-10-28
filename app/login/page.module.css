@@ -43,3 +43,15 @@
 .signupButton:hover {
   background-color: black;
 }
+
+.naver {
+  background-image: url('../../public/naverButton.png');
+  height: 60px;
+  width: 224px;
+  border: none;
+  margin: auto;
+  overflow: hidden;
+  cursor: pointer;
+  background-size: contain;
+  background-repeat: no-repeat;
+}

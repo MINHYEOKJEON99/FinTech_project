@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Nav from '@/components/layout/Nav';
+import AuthSession from '@/components/AuthSession';
 
 export const metadata: Metadata = {
   title: 'Fintech Service',
@@ -15,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Nav />
-        {children}
+        <AuthSession>
+          <Nav />
+          {children}
+        </AuthSession>
       </body>
     </html>
   );
