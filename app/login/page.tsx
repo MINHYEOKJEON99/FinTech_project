@@ -1,23 +1,24 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import {
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import app, { db } from '../firebase';
+import app from '../firebase';
 
 import Button from '@/components/UI/Button';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-import { ref, set } from 'firebase/database';
+import { LoginContext } from '@/store/loginStore';
 
 export default function Login() {
   // prettier-ignore
   const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 
+  const { loginState } = useContext(LoginContext);
   const auth = getAuth(app);
 
   const router = useRouter();
@@ -28,16 +29,15 @@ export default function Login() {
 
   //로그인 상태시 메인페이지로 이동
   useEffect(() => {
-    const loginState = onAuthStateChanged(auth, (user) => {
-      if (user) {
+    const confirmLogin = () => {
+      if (loginState) {
         router.push('/');
       } else {
         router.push('/login');
       }
-    });
-    return () => {
-      loginState();
     };
+
+    confirmLogin();
   }, []);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -57,6 +57,7 @@ export default function Login() {
         loginInfo.password
       );
       console.log('로그인 성공 ');
+      router.push('/');
     } catch (e) {
       console.log(e);
       alert('비밀번호와 이메일을 확인해주세요');

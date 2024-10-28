@@ -3,47 +3,17 @@
 import Link from 'next/link';
 import styles from './Nav.module.css';
 import app from '@/app/firebase';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { useSession, signOut } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { getAuth } from 'firebase/auth';
+import { useContext } from 'react';
+import { LoginContext } from '@/store/loginStore';
 
 export default function Nav() {
-  const { data: session } = useSession();
-  console.log(session);
   const auth = getAuth(app);
-  const [loginState, setLoginState] = useState(false);
-  const [socialLoginState, setSocialLoginState] = useState(false);
-
-  useEffect(() => {
-    const login = () => {
-      if (session?.user) {
-        setSocialLoginState(true);
-      } else {
-        setSocialLoginState(false);
-      }
-    };
-    return () => {
-      login();
-    };
-  });
-
-  useEffect(() => {
-    const login = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setLoginState(true);
-      } else {
-        setLoginState(false);
-      }
-    });
-    return () => {
-      login();
-    };
-  }, []);
+  const { loginState, logout } = useContext(LoginContext);
+  console.log(loginState);
 
   const onClickLogOut = async () => {
-    auth.signOut();
-    await signOut({ redirect: true, callbackUrl: '/' });
-    alert('로그아웃 되었습니다.');
+    logout();
   };
 
   return (
@@ -54,10 +24,13 @@ export default function Nav() {
       <div className={styles.menu}>
         <ul className={styles.list}>
           <li>
+            <Link href={'/accountRegister'}>계좌등록</Link>
+          </li>
+          <li>
             <Link href={'/community'}>게시판</Link>
           </li>
           <li>
-            {loginState || socialLoginState ? (
+            {loginState ? (
               <Link href={'/'} onClick={onClickLogOut}>
                 로그아웃
               </Link>

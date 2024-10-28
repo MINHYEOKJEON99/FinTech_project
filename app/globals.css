@@ -26,3 +26,15 @@ a {
 main {
   margin-top: 60px;
 }
+
+/* Chrome, Safari, Edge */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield; /* Firefox에서 숫자 입력창의 스피너를 제거 */
+}
