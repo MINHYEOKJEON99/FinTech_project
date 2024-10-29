@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  padding: 24px;
+  gap: 12px;
+}
+
+.font {
+  color: #929292;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.fontP {
+  color: #753333;
+  font-size: 20px;
+  font-weight: 400;
+}

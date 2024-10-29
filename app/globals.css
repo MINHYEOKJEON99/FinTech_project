@@ -4,6 +4,10 @@ body {
   overflow-x: hidden;
 }
 
+li {
+  list-style: none;
+}
+
 body {
   color: var(--foreground);
   background: #f3f5f7;

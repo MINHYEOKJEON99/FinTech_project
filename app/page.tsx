@@ -1,6 +1,7 @@
 import { auth } from '@/auth';
 import styles from './page.module.css';
 import Button from '@/components/UI/Button';
+import Balance from '@/components/Balance';
 
 export default async function Home() {
   return (
@@ -16,6 +17,14 @@ export default async function Home() {
             </Button>
           </div>
           <div></div>
+        </div>
+        <div>
+          <div className={styles.balanceWrapper}>
+            <h2>잔고</h2>
+            <div className={styles.balanceContainer}>
+              <Balance />
+            </div>
+          </div>
         </div>
       </main>
     </div>
