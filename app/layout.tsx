@@ -3,6 +3,7 @@ import './globals.css';
 import Nav from '@/components/layout/Nav';
 import AuthSession from '@/components/AuthSession';
 import LoginStore from '@/store/loginStore';
+import AccountStore from '@/store/accountStore';
 
 export const metadata: Metadata = {
   title: 'Fintech Service',
@@ -19,8 +20,10 @@ export default function RootLayout({
       <body>
         <AuthSession>
           <LoginStore>
-            <Nav />
-            {children}
+            <AccountStore>
+              <Nav />
+              {children}
+            </AccountStore>
           </LoginStore>
         </AuthSession>
       </body>

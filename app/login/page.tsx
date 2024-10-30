@@ -69,7 +69,7 @@ export default function Login() {
   };
 
   const onNaverLogin = async () => {
-    const res = await signIn('naver', {
+    await signIn('naver', {
       redirect: true,
       callbackUrl: '/',
     });

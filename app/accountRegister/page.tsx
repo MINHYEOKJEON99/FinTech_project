@@ -4,17 +4,17 @@ import styles from './page.module.css';
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LoginContext } from '@/store/loginStore';
-import { get, ref, update } from 'firebase/database';
-import { db } from '../firebase';
+import { AccountContext } from '@/store/accountStore';
 
 export default function AccountRegister() {
   const router = useRouter();
-  const { loginState, userKey } = useContext(LoginContext);
-  const [account, setAccount] = useState([]);
+  const { loginState } = useContext(LoginContext);
   const [newAccount, setNewAccount] = useState({
     accountNumber: '',
     balance: 0,
   });
+
+  const { updateAccount } = useContext(AccountContext);
 
   useEffect(() => {
     const confirmLogin = () => {
@@ -29,20 +29,6 @@ export default function AccountRegister() {
     confirmLogin();
   }, []);
 
-  useEffect(() => {
-    const fetchAccounts = async () => {
-      const accountsRef = ref(db, `users/${userKey}/account`);
-      const snapshot = await get(accountsRef);
-      if (snapshot.exists()) {
-        setAccount(snapshot.val() || []); // 기존 계좌 정보 가져오기
-      } else {
-        console.log('No account data found');
-      }
-    };
-
-    fetchAccounts();
-  }, [userKey]); // userKey가 변경될 때 계좌 정보 가져오기
-
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewAccount({ ...newAccount, accountNumber: e.target.value });
   };
@@ -55,12 +41,8 @@ export default function AccountRegister() {
       return;
     }
 
-    const updatedAccounts = [...account, newAccount];
-
     try {
-      update(ref(db, `users/${userKey}`), {
-        account: updatedAccounts,
-      });
+      updateAccount(newAccount);
 
       router.push('/');
       alert('계좌가 등록되었습니다');

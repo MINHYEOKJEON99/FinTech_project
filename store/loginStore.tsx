@@ -28,6 +28,9 @@ export default function LoginStore({ children }: LoginStoreProps) {
   const [loginState, setLoginState] = useState(false);
   const [userKey, setUserKey] = useState('');
   const { data: session } = useSession();
+  console.log(session);
+
+  const sessionExpirationTime = 30 * 60 * 1000;
 
   useEffect(() => {
     const login = onAuthStateChanged(auth, (user) => {
@@ -43,12 +46,22 @@ export default function LoginStore({ children }: LoginStoreProps) {
         const { id } = session.user;
         setUserKey(String(id));
       }
+      if (loginState) {
+        const logoutTimer = setTimeout(() => {
+          auth.signOut();
+          signOut({ redirect: true, callbackUrl: '/' });
+          setLoginState(false);
+          alert('세션이 만료되어 로그아웃되었습니다.');
+        }, sessionExpirationTime);
+
+        return () => clearTimeout(logoutTimer);
+      }
     });
 
     return () => {
       login();
     };
-  });
+  }, [loginState, auth, session]);
 
   const loginStore: stateType = {
     loginState,
