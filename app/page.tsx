@@ -1,7 +1,7 @@
-import { auth } from '@/auth';
 import styles from './page.module.css';
 import Button from '@/components/UI/Button';
 import Balance from '@/components/Balance';
+import Link from 'next/link';
 
 export default async function Home() {
   return (
@@ -12,9 +12,9 @@ export default async function Home() {
             <h2 className={styles.title}>
               간편한 금융 서비스를<p>이용하세요</p>
             </h2>
-            <Button type="button" path="/login">
-              이용하기
-            </Button>
+            <Link href={'/login'}>
+              <Button type="button">이용하기</Button>
+            </Link>
           </div>
           <div></div>
         </div>

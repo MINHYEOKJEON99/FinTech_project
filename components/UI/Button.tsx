@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 
 interface ButtonParameter {
   styles?: string;
-  path?: string;
   children: string | React.ReactNode;
+  onClickHandler?: () => void;
+  path?: string;
   type: 'button' | 'submit' | 'reset' | undefined;
 }
 
@@ -14,20 +15,12 @@ export default function Button({
   type,
   styles,
   children,
-  path = '/',
+  onClickHandler,
 }: ButtonParameter) {
-  const router = useRouter();
-
-  const onClick: (event: React.MouseEvent<HTMLButtonElement>) => void = () => {
-    if (type === 'button') {
-      router.push(path);
-    }
-  };
-
   return (
     <button
       type={type}
-      onClick={onClick}
+      onClick={onClickHandler}
       className={clsx(classes.button, styles)}
     >
       {children}

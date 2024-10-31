@@ -68,6 +68,10 @@ export default function Login() {
     setLoginInfo({ ...loginInfo, [e.target.name]: e.target.value });
   };
 
+  const onClickSignUp = () => {
+    router.push('/signup');
+  };
+
   const onNaverLogin = async () => {
     await signIn('naver', {
       redirect: true,
@@ -97,7 +101,11 @@ export default function Login() {
             onChange={onChange}
           />
           <Button type="submit">로그인</Button>
-          <Button type="button" path="/signup" styles={styles.signupButton}>
+          <Button
+            type="button"
+            onClickHandler={onClickSignUp}
+            styles={styles.signupButton}
+          >
             회원가입
           </Button>
           <button

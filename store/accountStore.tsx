@@ -18,6 +18,10 @@ interface stateType {
     accountNumber: string;
     balance: number;
   }) => void;
+  addAccount: (updatedAccounts: {
+    accountNumber: string;
+    balance: number;
+  }) => void;
 }
 
 export const AccountContext = createContext<stateType>({
@@ -28,6 +32,7 @@ export const AccountContext = createContext<stateType>({
     },
   ],
   updateAccount: () => console.log('update'),
+  addAccount: () => console.log('add'),
 });
 
 export default function AccountStore({ children }: LoginStoreProps) {
@@ -48,7 +53,7 @@ export default function AccountStore({ children }: LoginStoreProps) {
     fetchAccounts();
   }, [userKey, account]);
 
-  function updateAccount(updatedAccounts: {
+  function addAccount(updatedAccounts: {
     accountNumber: string;
     balance: number;
   }) {
@@ -57,9 +62,26 @@ export default function AccountStore({ children }: LoginStoreProps) {
     });
   }
 
+  function updateAccount(updatedAccount: {
+    accountNumber: string;
+    balance: number;
+  }) {
+    const updatedAccountList = account.map(
+      (acc: { accountNumber: string; balance: number }) =>
+        acc.accountNumber === updatedAccount.accountNumber
+          ? { ...acc, balance: updatedAccount.balance } // 기존 accountNumber가 같다면 balance만 업데이트
+          : acc
+    );
+
+    update(ref(db, `users/${userKey}`), {
+      account: updatedAccountList,
+    });
+  }
+
   const accountStore: stateType = {
     account,
     updateAccount,
+    addAccount,
   };
 
   return (

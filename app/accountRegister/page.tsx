@@ -14,7 +14,7 @@ export default function AccountRegister() {
     balance: 0,
   });
 
-  const { updateAccount } = useContext(AccountContext);
+  const { addAccount } = useContext(AccountContext);
 
   useEffect(() => {
     const confirmLogin = () => {
@@ -42,7 +42,7 @@ export default function AccountRegister() {
     }
 
     try {
-      updateAccount(newAccount);
+      addAccount(newAccount);
 
       router.push('/');
       alert('계좌가 등록되었습니다');

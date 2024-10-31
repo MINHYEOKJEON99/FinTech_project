@@ -1,7 +1,5 @@
-import { ref, set } from 'firebase/database';
 import NextAuth from 'next-auth';
 import NaverProvider from 'next-auth/providers/naver';
-import { db } from './app/firebase';
 
 export const {
   handlers: { GET, POST },
@@ -22,9 +20,9 @@ export const {
       console.log(user, profile);
 
       const res = await fetch(
-        `https://fintech-3d5db-default-rtdb.asia-southeast1.firebasedatabase.app/users/${id}.json`,
+        process.env.NEXT_PUBLIC_DATABASEURL + `users/${id}.json`,
         {
-          method: 'PUT',
+          method: 'PATCH',
           body: JSON.stringify({
             nickname: nickname,
             birth: `${birthyear}-${birthday}`,

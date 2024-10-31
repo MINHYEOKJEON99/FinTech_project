@@ -25,7 +25,7 @@ export const LoginContext = createContext<stateType>({
 
 export default function LoginStore({ children }: LoginStoreProps) {
   const auth = getAuth(app);
-  const [loginState, setLoginState] = useState(false);
+  const [loginState, setLoginState] = useState(true);
   const [userKey, setUserKey] = useState('');
   const { data: session } = useSession();
   console.log(session);

@@ -27,6 +27,9 @@ export default function Nav() {
             <Link href={'/accountRegister'}>계좌등록</Link>
           </li>
           <li>
+            <Link href={'/accountCharge'}>잔액충전</Link>
+          </li>
+          <li>
             <Link href={'/community'}>게시판</Link>
           </li>
           <li>
