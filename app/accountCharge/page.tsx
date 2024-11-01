@@ -68,6 +68,11 @@ export default function AccountRegister() {
       alert('계좌번호를 입력해주세요');
       return;
     }
+
+    if (+chargeMoney < 0) {
+      alert('0원 이상을 입력해주세요');
+      return;
+    }
     setVisibleModal({ ...visibleModal, confirm: true });
   };
 
@@ -85,7 +90,7 @@ export default function AccountRegister() {
   return (
     <main className={styles.wrapper}>
       <div className={styles.container}>
-        <h2>계좌 등록</h2>
+        <h2>잔액 충전</h2>
         <form onSubmit={onSubmit} className={styles.form}>
           <div
             className={styles.accountSelect}

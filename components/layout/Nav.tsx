@@ -24,6 +24,9 @@ export default function Nav() {
       <div className={styles.menu}>
         <ul className={styles.list}>
           <li>
+            <Link href={'/manageAccount'}>계좌관리</Link>
+          </li>
+          <li>
             <Link href={'/accountRegister'}>계좌등록</Link>
           </li>
           <li>

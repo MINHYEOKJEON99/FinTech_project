@@ -1,0 +1,29 @@
+.wrapper {
+  display: flex;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  gap: 24px;
+  background-color: #fff;
+  border: 2px solid #ccc;
+}
+
+.accountNumber {
+  color: #a4a4a4;
+  border-bottom: 1px solid #ccc;
+  padding: 12px;
+}
+
+.accountNumber:hover {
+  background-color: #d9d9d9;
+  cursor: pointer;
+}
