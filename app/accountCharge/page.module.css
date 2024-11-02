@@ -96,6 +96,9 @@
   z-index: 998;
   width: 100vw;
   height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #31282828;
 }
 
@@ -103,9 +106,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: absolute;
-  top: 25vh;
-  left: 30vw;
+
   width: 480px;
   height: 270px;
   padding: 16px;
