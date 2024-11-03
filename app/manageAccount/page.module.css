@@ -20,6 +20,7 @@
   gap: 24px;
   background-color: #fff;
   border: 2px solid #ccc;
+  margin-bottom: 24px;
 }
 
 .accountNumber {
@@ -54,7 +55,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
+  margin-bottom: 200px;
   width: 480px;
   height: 270px;
   padding: 16px;
@@ -62,6 +63,19 @@
   border-radius: 8px;
   color: #636363;
   animation: slide-down 0.4s ease forwards;
+}
+
+.closeButton {
+  background-color: #ccc;
+}
+
+.closeButton:hover {
+  background-color: black;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes slide-down {

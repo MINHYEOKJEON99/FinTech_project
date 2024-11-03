@@ -1,9 +1,11 @@
 'use client';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styles from './page.module.css';
 import { LoginContext } from '@/store/loginStore';
 import { AccountContext } from '@/store/accountStore';
 import Button from '@/components/UI/Button';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function ManageAccount() {
   const { userInfo } = useContext(LoginContext);
@@ -16,6 +18,23 @@ export default function ManageAccount() {
     balance: 0,
   });
 
+  const { loginState } = useContext(LoginContext);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const confirmLogin = () => {
+      if (loginState) {
+        router.push('/manageAccount');
+      } else {
+        alert('로그인이 필요합니다');
+        router.push('/login');
+      }
+    };
+
+    confirmLogin();
+  }, []);
+
   const onClickAccount = (account: {
     accountNumber: string;
     balance: number;
@@ -26,6 +45,10 @@ export default function ManageAccount() {
 
   const onClickBack = () => {
     setVisible(false);
+  };
+
+  const onClickRemit = () => {
+    router.push(`/remittance/${currentAccount.accountNumber}`);
   };
 
   return (
@@ -44,18 +67,28 @@ export default function ManageAccount() {
           ))}
         </ul>
       </div>
-      <div className={styles.buttonContainer}>
+
+      <Link href="/accountCharge">
         <Button type="button">충전하기</Button>
-        <Button type="button">송금하기</Button>
-      </div>
+      </Link>
+
       {visible && (
         <div className={styles.modalBackground}>
           <div className={styles.modal}>
             <h3>{currentAccount.accountNumber}계좌의 정보</h3>
             <p>잔액: {currentAccount.balance}</p>
-            <Button onClickHandler={onClickBack} type="button">
-              닫기
-            </Button>
+            <div className={styles.buttonContainer}>
+              <Button onClickHandler={onClickRemit} type="button">
+                송금하기
+              </Button>
+              <Button
+                onClickHandler={onClickBack}
+                styles={styles.closeButton}
+                type="button"
+              >
+                닫기
+              </Button>
+            </div>
           </div>
         </div>
       )}
