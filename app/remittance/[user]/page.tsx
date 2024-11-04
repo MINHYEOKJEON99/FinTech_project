@@ -5,6 +5,7 @@ import { use, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LoginContext } from '@/store/loginStore';
 import { AccountContext } from '@/store/accountStore';
+import clsx from 'clsx';
 
 export default function Remittance({ params }: any) {
   const { userInfo, loginState } = useContext(LoginContext);
@@ -116,7 +117,10 @@ export default function Remittance({ params }: any) {
           />
           <input
             type="number"
-            className={styles.input}
+            className={clsx(styles.input, {
+              [styles.invalidInput]:
+                currentAccount.balance - Number(remitMoney) < 0,
+            })}
             placeholder="금액을 입력해주세요"
             value={remitMoney}
             onChange={onChange}

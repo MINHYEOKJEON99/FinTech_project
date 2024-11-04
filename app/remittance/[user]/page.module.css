@@ -36,6 +36,11 @@
   transition: all 500ms;
 }
 
+.invalidInput {
+  background-color: #fbcbcb;
+  border-color: #ffabab;
+}
+
 .modal {
   position: absolute;
   left: -2px;
