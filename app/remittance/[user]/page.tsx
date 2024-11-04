@@ -16,6 +16,7 @@ export default function Remittance({ params }: any) {
   const [visibleModal, setVisibleModal] = useState({
     accountSelect: false,
     confirm: false,
+    remitComplete: false,
   });
   const [user, setUser] = useState('');
   const [currentAccount, setCurrentAccount] = useState({
@@ -53,7 +54,9 @@ export default function Remittance({ params }: any) {
       }
     }
   }, [user, account]);
-  const onClickModal = (modal: 'accountSelect' | 'confirm') => {
+  const onClickModal = (
+    modal: 'accountSelect' | 'confirm' | 'remitComplete'
+  ) => {
     setVisibleModal({ ...visibleModal, [modal]: !visibleModal[modal] });
   };
 
@@ -93,8 +96,7 @@ export default function Remittance({ params }: any) {
       balance: currentAccount.balance - Number(remitMoney),
     });
 
-    alert('송금이 완료되었습니다.');
-    setVisibleModal({ ...visibleModal, confirm: false });
+    setVisibleModal({ ...visibleModal, confirm: false, remitComplete: true });
   };
   return (
     <main className={styles.wrapper}>
@@ -136,6 +138,19 @@ export default function Remittance({ params }: any) {
             <Button
               type="button"
               onClickHandler={onClickModal.bind(null, 'confirm')}
+            >
+              닫기
+            </Button>
+          </div>
+        </div>
+      )}
+      {visibleModal.remitComplete && (
+        <div className={styles.modalBackground}>
+          <div className={styles.submitModal}>
+            <h3>송금이 완료되었습니다</h3>
+            <Button
+              type="button"
+              onClickHandler={onClickModal.bind(null, 'remitComplete')}
             >
               닫기
             </Button>

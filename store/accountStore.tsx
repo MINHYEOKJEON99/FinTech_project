@@ -121,7 +121,9 @@ export default function AccountStore({ children }: LoginStoreProps) {
     //Objects.values를 이용하여 배열로 반환
     for (let i = 0; i < arr.length; i++) {
       const userId = arr[i];
-      const userAccounts = Object.values(users[userId].account); // 현재 사용자의 계좌 배열
+      const userAccounts = users[userId].account
+        ? Object.values(users[userId].account)
+        : []; // 현재 사용자의 계좌 배열
 
       // 현재 사용자 계좌 배열에서 remitAccount와 일치하는 계좌가 있는지 확인
       const matchingAccount = userAccounts.find(
