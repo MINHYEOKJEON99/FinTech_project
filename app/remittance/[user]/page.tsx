@@ -7,7 +7,9 @@ import { LoginContext } from '@/store/loginStore';
 import { AccountContext } from '@/store/accountStore';
 
 export default function Remittance({ params }: any) {
-  const { userInfo } = useContext(LoginContext);
+  const { userInfo, loginState } = useContext(LoginContext);
+  const { remit, account, updateAccount } = useContext(AccountContext);
+  const router = useRouter();
 
   const [remitMoney, setRemitMoney] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
@@ -15,30 +17,42 @@ export default function Remittance({ params }: any) {
     accountSelect: false,
     confirm: false,
   });
-
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState('');
+  const [currentAccount, setCurrentAccount] = useState({
+    accountNumber: '',
+    balance: 0,
+  });
 
   useEffect(() => {
     async function fetchParams() {
-      const resolvedParams = await params; // `await`로 `params`를 unwrap
+      const resolvedParams = await params;
+
       setUser(resolvedParams.user);
     }
     fetchParams();
   }, [params]);
 
-  // useEffect(() => {
-  //   const confirmLogin = () => {
-  //     if (loginState) {
-  //       router.push('/accountCharge');
-  //     } else {
-  //       alert('로그인이 필요합니다');
-  //       router.push('/login');
-  //     }
-  //   };
+  useEffect(() => {
+    const confirmLogin = () => {
+      if (!loginState) {
+        router.push('/login');
+      }
+    };
 
-  //   confirmLogin();
-  // }, []);
+    confirmLogin();
+  }, []);
+  useEffect(() => {
+    if (user && account.length > 0) {
+      // user와 account가 존재할 때만 실행
+      const ac = account.find((ac) => ac.accountNumber === user);
 
+      if (ac) {
+        setCurrentAccount(ac); // ac가 존재할 때만 currentAccount 설정
+      } else {
+        console.warn('해당 계좌를 찾을 수 없습니다.');
+      }
+    }
+  }, [user, account]);
   const onClickModal = (modal: 'accountSelect' | 'confirm') => {
     setVisibleModal({ ...visibleModal, [modal]: !visibleModal[modal] });
   };
@@ -63,16 +77,34 @@ export default function Remittance({ params }: any) {
       alert('0원 이상을 입력해주세요');
       return;
     }
+
+    if (currentAccount.balance - +remitMoney < 0) {
+      alert('잔액이 부족합니다');
+      return;
+    }
+
     setVisibleModal({ ...visibleModal, confirm: true });
   };
 
+  const onConfirm = () => {
+    remit(accountNumber, +remitMoney);
+    updateAccount({
+      ...currentAccount,
+      balance: currentAccount.balance - Number(remitMoney),
+    });
+
+    alert('송금이 완료되었습니다.');
+    setVisibleModal({ ...visibleModal, confirm: false });
+  };
   return (
     <main className={styles.wrapper}>
       <h2 className={styles.h2}>
-        {userInfo.nickname}의 계좌 {user}
+        {userInfo.nickname}의 계좌 {currentAccount?.accountNumber}
+        <p>잔액: {currentAccount.balance} 원</p>
       </h2>
       <div className={styles.container}>
         <h2>송금하기</h2>
+        <p>송금 테스트 계좌: 12345678</p>
         <form onSubmit={onSubmit} className={styles.form}>
           <input
             className={styles.input}
@@ -93,17 +125,20 @@ export default function Remittance({ params }: any) {
         </form>
       </div>
       {visibleModal.confirm && (
-        <div
-          className={styles.modalBackground}
-          onClick={onClickModal.bind(null, 'confirm')}
-        >
+        <div className={styles.modalBackground}>
           <div className={styles.submitModal}>
             <p>송금하려는 계좌번호와 금액을 확인해주세요</p>
-            {/* <p>계좌번호 : {currentAccount.accountNumber}</p>
-            <p>충전 후 금액 : {newAccount.balance} (원)</p> 
-            <Button onClickHandler={confirmHandler} type="submit">
+            <p>계좌번호 : {accountNumber}</p>
+            <p>송금 할 금액 : {remitMoney} (원)</p>
+            <Button type="submit" onClickHandler={onConfirm}>
               확인
-            </Button> */}
+            </Button>
+            <Button
+              type="button"
+              onClickHandler={onClickModal.bind(null, 'confirm')}
+            >
+              닫기
+            </Button>
           </div>
         </div>
       )}
