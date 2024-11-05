@@ -6,9 +6,10 @@ import { useRouter } from 'next/navigation';
 import { LoginContext } from '@/store/loginStore';
 import { AccountContext } from '@/store/accountStore';
 import clsx from 'clsx';
+import SecondPassword from '@/components/SecondPassword';
 
 export default function Remittance({ params }: any) {
-  const { userInfo, loginState } = useContext(LoginContext);
+  const { userInfo, loginState, secondPassword } = useContext(LoginContext);
   const { remit, account, updateAccount } = useContext(AccountContext);
   const router = useRouter();
 
@@ -18,6 +19,7 @@ export default function Remittance({ params }: any) {
     accountSelect: false,
     confirm: false,
     remitComplete: false,
+    secondPassword: false,
   });
   const [user, setUser] = useState('');
   const [currentAccount, setCurrentAccount] = useState({
@@ -25,6 +27,7 @@ export default function Remittance({ params }: any) {
     balance: 0,
   });
 
+  //사이드 이펙트
   useEffect(() => {
     async function fetchParams() {
       const resolvedParams = await params;
@@ -55,6 +58,8 @@ export default function Remittance({ params }: any) {
       }
     }
   }, [user, account]);
+
+  // 이벤트 핸들러
   const onClickModal = (
     modal: 'accountSelect' | 'confirm' | 'remitComplete'
   ) => {
@@ -90,15 +95,29 @@ export default function Remittance({ params }: any) {
     setVisibleModal({ ...visibleModal, confirm: true });
   };
 
+  const onCheck = () => {
+    setVisibleModal({ ...visibleModal, confirm: false, secondPassword: true });
+  };
   const onConfirm = () => {
-    remit(accountNumber, +remitMoney);
+    remit(accountNumber.trim(), +remitMoney);
     updateAccount({
       ...currentAccount,
       balance: currentAccount.balance - Number(remitMoney),
     });
 
-    setVisibleModal({ ...visibleModal, confirm: false, remitComplete: true });
+    setVisibleModal({
+      ...visibleModal,
+      secondPassword: false,
+      remitComplete: true,
+    });
+    setAccountNumber('');
+    setRemitMoney('');
   };
+
+  const onCloseSecondPw = () => {
+    setVisibleModal({ ...visibleModal, secondPassword: false });
+  };
+
   return (
     <main className={styles.wrapper}>
       <h2 className={styles.h2}>
@@ -126,7 +145,7 @@ export default function Remittance({ params }: any) {
             onChange={onChange}
           />
           <Button type="submit" styles={styles.button}>
-            충전하기
+            송금하기
           </Button>
         </form>
       </div>
@@ -136,7 +155,7 @@ export default function Remittance({ params }: any) {
             <p>송금하려는 계좌번호와 금액을 확인해주세요</p>
             <p>계좌번호 : {accountNumber}</p>
             <p>송금 할 금액 : {remitMoney} (원)</p>
-            <Button type="submit" onClickHandler={onConfirm}>
+            <Button type="submit" onClickHandler={onCheck}>
               확인
             </Button>
             <Button
@@ -160,6 +179,16 @@ export default function Remittance({ params }: any) {
             </Button>
           </div>
         </div>
+      )}
+      {visibleModal.secondPassword && (
+        <>
+          <div className={styles.closeModal}>닫기</div>
+          <SecondPassword
+            mode={secondPassword ? 'confirm' : 'set'}
+            onClose={onCloseSecondPw}
+            onConfirm={onConfirm}
+          />
+        </>
       )}
     </main>
   );

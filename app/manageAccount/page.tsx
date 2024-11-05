@@ -9,8 +9,8 @@ import Link from 'next/link';
 
 export default function ManageAccount() {
   const { userInfo } = useContext(LoginContext);
+  const { loginState } = useContext(LoginContext);
   const { account } = useContext(AccountContext);
-
   const [visible, setVisible] = useState(false);
 
   const [currentAccount, setCurrentAccount] = useState({
@@ -18,15 +18,11 @@ export default function ManageAccount() {
     balance: 0,
   });
 
-  const { loginState } = useContext(LoginContext);
-
   const router = useRouter();
 
   useEffect(() => {
     const confirmLogin = () => {
-      if (loginState) {
-        router.push('/manageAccount');
-      } else {
+      if (!loginState) {
         alert('로그인이 필요합니다');
         router.push('/login');
       }
@@ -52,46 +48,50 @@ export default function ManageAccount() {
   };
 
   return (
-    <main className={styles.wrapper}>
-      <h2 className={styles.h2}>{userInfo.nickname}님의 계좌</h2>
-      <div className={styles.container}>
-        <ul>
-          {account.map((account) => (
-            <li
-              key={account.accountNumber}
-              className={styles.accountNumber}
-              onClick={onClickAccount.bind(null, account)}
-            >
-              {account.accountNumber}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <Link href="/accountCharge">
-        <Button type="button">충전하기</Button>
-      </Link>
-
-      {visible && (
-        <div className={styles.modalBackground}>
-          <div className={styles.modal}>
-            <h3>{currentAccount.accountNumber}계좌의 정보</h3>
-            <p>잔액: {currentAccount.balance}</p>
-            <div className={styles.buttonContainer}>
-              <Button onClickHandler={onClickRemit} type="button">
-                송금하기
-              </Button>
-              <Button
-                onClickHandler={onClickBack}
-                styles={styles.closeButton}
-                type="button"
-              >
-                닫기
-              </Button>
-            </div>
+    <>
+      {loginState && (
+        <main className={styles.wrapper}>
+          <h2 className={styles.h2}>{userInfo.nickname}님의 계좌</h2>
+          <div className={styles.container}>
+            <ul>
+              {account.map((account) => (
+                <li
+                  key={account.accountNumber}
+                  className={styles.accountNumber}
+                  onClick={onClickAccount.bind(null, account)}
+                >
+                  {account.accountNumber}
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
+
+          <Link href="/accountCharge">
+            <Button type="button">충전하기</Button>
+          </Link>
+
+          {visible && (
+            <div className={styles.modalBackground}>
+              <div className={styles.modal}>
+                <h3>{currentAccount.accountNumber}계좌의 정보</h3>
+                <p>잔액: {currentAccount.balance}</p>
+                <div className={styles.buttonContainer}>
+                  <Button onClickHandler={onClickRemit} type="button">
+                    송금하기
+                  </Button>
+                  <Button
+                    onClickHandler={onClickBack}
+                    styles={styles.closeButton}
+                    type="button"
+                  >
+                    닫기
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
       )}
-    </main>
+    </>
   );
 }

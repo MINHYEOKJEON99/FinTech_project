@@ -1,7 +1,7 @@
 'use client';
 import app, { db } from '@/app/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { get, ref } from 'firebase/database';
+import { get, onValue, ref, update } from 'firebase/database';
 import { signOut, useSession } from 'next-auth/react';
 import { createContext, useEffect, useState } from 'react';
 
@@ -21,6 +21,8 @@ interface stateType {
     birth: string;
     nickname: string;
   };
+  secondPassword: string;
+  addSecondPassword: (secondPw: string) => void;
 }
 
 export const LoginContext = createContext<stateType>({
@@ -34,16 +36,19 @@ export const LoginContext = createContext<stateType>({
     birth: '1999-12-08',
     nickname: 'name',
   },
+  secondPassword: '',
+  addSecondPassword: (str) => console.log(str),
 });
 
 export default function LoginStore({ children }: LoginStoreProps) {
   const auth = getAuth(app);
   const [loginState, setLoginState] = useState(true);
   const [userKey, setUserKey] = useState('');
+  const [secondPassword, setSecondPassword] = useState('');
   const [userInfo, setUserInfo] = useState({
-    account: [{ accountNumber: '', balance: 0 }],
-    birth: '1999-12-08',
-    nickname: 'name',
+    account: [],
+    birth: '',
+    nickname: '',
   });
 
   const { data: session } = useSession();
@@ -68,7 +73,7 @@ export default function LoginStore({ children }: LoginStoreProps) {
       if (loginState) {
         const logoutTimer = setTimeout(() => {
           auth.signOut();
-          signOut({ redirect: true, callbackUrl: '/' });
+          signOut({ redirect: false, callbackUrl: '/' });
           setLoginState(false);
           alert('세션이 만료되어 로그아웃되었습니다.');
         }, sessionExpirationTime);
@@ -84,19 +89,39 @@ export default function LoginStore({ children }: LoginStoreProps) {
 
   useEffect(() => {
     if (userKey) {
-      const fetchAccounts = async () => {
-        const userInfoRef = ref(db, `users/${userKey}`);
-        const snapshot = await get(userInfoRef);
+      const userInfoRef = ref(db, `users/${userKey}`);
+
+      const unsubscribe = onValue(userInfoRef, (snapshot) => {
         if (snapshot.exists()) {
           setUserInfo(snapshot.val() || {}); // 기존 계좌 정보 가져오기
         } else {
           console.log('No user data found');
         }
-      };
-
-      fetchAccounts();
+      });
+      return () => unsubscribe();
     }
   }, [userKey]);
+
+  useEffect(() => {
+    if (userKey) {
+      const fetchAccounts = async () => {
+        const userInfoRef = ref(db, `users/${userKey}/secondPassword`);
+        const snapshot = await get(userInfoRef);
+        if (snapshot.exists()) {
+          setSecondPassword(snapshot.val() || '');
+        } else {
+          console.log('No user data found');
+        }
+      };
+      fetchAccounts();
+    }
+  }, [userKey, secondPassword, userInfo]);
+
+  const addSecondPassword = async (secondPw: string) => {
+    update(ref(db, `users/${userKey}`), {
+      secondPassword: secondPw,
+    });
+  };
 
   const loginStore: stateType = {
     loginState,
@@ -107,6 +132,8 @@ export default function LoginStore({ children }: LoginStoreProps) {
       await signOut({ redirect: true, callbackUrl: '/' });
       alert('로그아웃 되었습니다.');
     },
+    secondPassword,
+    addSecondPassword,
   };
 
   return (

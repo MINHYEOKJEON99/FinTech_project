@@ -1,7 +1,7 @@
 'use client';
 
 import { db } from '@/app/firebase';
-import { get, ref, update } from 'firebase/database';
+import { get, ref, set, update } from 'firebase/database';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { LoginContext } from './loginStore';
 
@@ -42,35 +42,26 @@ type Users = {
 };
 
 export const AccountContext = createContext<stateType>({
-  account: [
-    {
-      accountNumber: '',
-      balance: 0,
-    },
-  ],
+  account: [],
   updateAccount: () => console.log('update'),
   addAccount: () => console.log('add'),
   remit: () => console.log('remit'),
 });
 
 export default function AccountStore({ children }: LoginStoreProps) {
-  const { userKey } = useContext(LoginContext);
-  const [account, setAccount] = useState([]);
+  const { userKey, userInfo } = useContext(LoginContext);
+  const [account, setAccount] = useState<Account[]>([]);
   const [users, setUsers] = useState<Users>({});
 
   useEffect(() => {
     const fetchAccounts = async () => {
-      const accountsRef = ref(db, `users/${userKey}/account`);
-      const snapshot = await get(accountsRef);
-      if (snapshot.exists()) {
-        setAccount(snapshot.val() || []); // 기존 계좌 정보 가져오기
-      } else {
-        console.log('No account data found');
+      if (userKey && userInfo.account) {
+        setAccount(userInfo.account);
       }
     };
 
     fetchAccounts();
-  }, [userKey, account]);
+  }, [userKey, userInfo]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -90,9 +81,15 @@ export default function AccountStore({ children }: LoginStoreProps) {
     accountNumber: string;
     balance: number;
   }) {
-    update(ref(db, `users/${userKey}`), {
-      account: [...account, updatedAccounts],
-    });
+    if (account) {
+      update(ref(db, `users/${userKey}`), {
+        account: [...account, updatedAccounts],
+      });
+    } else {
+      set(ref(db, `users/${userKey}`), {
+        account: [updatedAccounts],
+      });
+    }
   }
 
   function updateAccount(updatedAccount: {
@@ -124,7 +121,7 @@ export default function AccountStore({ children }: LoginStoreProps) {
       const userAccounts = users[userId].account
         ? Object.values(users[userId].account)
         : []; // 현재 사용자의 계좌 배열
-
+      console.log(userAccounts);
       // 현재 사용자 계좌 배열에서 remitAccount와 일치하는 계좌가 있는지 확인
       const matchingAccount = userAccounts.find(
         (account) => account.accountNumber === remitAccount
@@ -139,12 +136,14 @@ export default function AccountStore({ children }: LoginStoreProps) {
       }
     }
 
-    update(ref(db, `users/${remittance.remitUserkey}`), {
-      account: {
-        accountNumber: remittance.accountNumber,
-        balance: remittance.balance + remitMoney,
-      },
-    });
+    if (remittance.remitUserkey) {
+      update(ref(db, `users/${remittance.remitUserkey}`), {
+        account: {
+          accountNumber: remittance.accountNumber,
+          balance: remittance.balance + remitMoney,
+        },
+      });
+    }
   }
 
   const accountStore: stateType = {

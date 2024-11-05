@@ -1,9 +1,8 @@
 'use client';
 
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import styles from './Balance.module.css';
-import { get, ref } from 'firebase/database';
-import { db } from '@/app/firebase';
+
 import { LoginContext } from '@/store/loginStore';
 import { AccountContext } from '@/store/accountStore';
 
@@ -21,7 +20,7 @@ export default function Balance() {
       {account.map((account: accountType) => (
         <div key={account.accountNumber} className={styles.container}>
           <p className={styles.fontP}>
-            <span className={styles.font}>계좌번호</span> :{' '}
+            <span className={styles.font}>계좌번호</span> :
             {account.accountNumber}
           </p>
           <p className={styles.fontP}>
