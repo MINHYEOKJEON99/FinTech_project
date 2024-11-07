@@ -33,6 +33,9 @@ export default function Nav() {
             <Link href={'/accountCharge'}>잔액충전</Link>
           </li>
           <li>
+            <Link href={'/payment'}>결제</Link>
+          </li>
+          <li>
             <Link href={'/community'}>게시판</Link>
           </li>
           <li>

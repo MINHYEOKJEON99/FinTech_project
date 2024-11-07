@@ -4,9 +4,8 @@ import { useState } from 'react';
 import {
   createUserWithEmailAndPassword,
   getAuth,
-  updateProfile,
 } from 'firebase/auth';
-import { getDatabase, ref, set } from 'firebase/database';
+import { ref, set } from 'firebase/database';
 import app, { db } from '../firebase';
 import clsx from 'clsx';
 import styles from './page.module.css';
@@ -66,7 +65,6 @@ export default function SignUp() {
         birth,
         nickname,
       });
-      console.log(createUser);
       router.push('/login');
     } catch (error) {
       console.error(error);

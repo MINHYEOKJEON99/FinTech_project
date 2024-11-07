@@ -17,11 +17,28 @@ interface stateType {
   updateAccount: (updatedAccounts: {
     accountNumber: string;
     balance: number;
+    expenseDetails?: {
+      category: string;
+      amount: string;
+      expenditureDate: string;
+    };
   }) => void;
+
   addAccount: (updatedAccounts: {
     accountNumber: string;
     balance: number;
   }) => void;
+
+  expense: (account: {
+    accountNumber: string;
+    balance: number;
+    expenseDetails: {
+      category: string;
+      amount: string;
+      expenditureDate: string;
+    };
+  }) => void;
+
   remit: (remitAccount: string, remitMoney: number) => void;
 }
 
@@ -45,6 +62,7 @@ export const AccountContext = createContext<stateType>({
   account: [],
   updateAccount: () => console.log('update'),
   addAccount: () => console.log('add'),
+  expense: () => console.log('pay'),
   remit: () => console.log('remit'),
 });
 
@@ -77,11 +95,12 @@ export default function AccountStore({ children }: LoginStoreProps) {
     fetchUser();
   }, [account]);
 
+  //계좌생성
   function addAccount(updatedAccounts: {
     accountNumber: string;
     balance: number;
   }) {
-    if (account) {
+    if (account.length) {
       update(ref(db, `users/${userKey}`), {
         account: [...account, updatedAccounts],
       });
@@ -92,6 +111,7 @@ export default function AccountStore({ children }: LoginStoreProps) {
     }
   }
 
+  //송금하기 함수 (계좌 잔고 업데이트)
   function updateAccount(updatedAccount: {
     accountNumber: string;
     balance: number;
@@ -108,6 +128,33 @@ export default function AccountStore({ children }: LoginStoreProps) {
     });
   }
 
+  //결제하기
+  function expense(updatedAccount: {
+    accountNumber: string;
+    balance: number;
+    expenseDetails: {
+      category: string;
+      amount: string;
+      expenditureDate: string;
+    };
+  }) {
+    const updatedAccountList = account.map(
+      (acc: { accountNumber: string; balance: number }) =>
+        acc.accountNumber === updatedAccount.accountNumber
+          ? {
+              ...acc,
+              balance: updatedAccount.balance,
+              expenseDetails: updatedAccount.expenseDetails,
+            } // 기존 accountNumber가 같다면 balance만 업데이트
+          : acc
+    );
+
+    update(ref(db, `users/${userKey}`), {
+      account: updatedAccountList,
+    });
+  }
+
+  //송금하기 함수 (송금받는 계좌 업데이트)
   function remit(remitAccount: string, remitMoney: number) {
     const arr = Object.keys(users);
     let remittance = {
@@ -150,6 +197,7 @@ export default function AccountStore({ children }: LoginStoreProps) {
     account,
     updateAccount,
     addAccount,
+    expense,
     remit,
   };
 
