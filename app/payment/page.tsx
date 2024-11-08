@@ -30,6 +30,18 @@ export default function Payment() {
     balance: 0,
   });
 
+  const getCurrentTimeString = () => {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+    const day = String(now.getDate()).padStart(2, '0');
+    const hour = String(now.getHours()).padStart(2, '0');
+    const minute = String(now.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hour}시${minute}분`;
+  };
+
   //사이드 이펙트
 
   useEffect(() => {
@@ -43,18 +55,6 @@ export default function Payment() {
   }, []);
 
   // 이벤트 핸들러
-
-  const getCurrentTimeString = () => {
-    const now = new Date();
-
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
-    const day = String(now.getDate()).padStart(2, '0');
-    const hour = String(now.getHours()).padStart(2, '0');
-    const minute = String(now.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hour}시${minute}분`;
-  };
 
   const onClickModal = (
     modal:

@@ -34,6 +34,15 @@
   cursor: pointer;
 }
 
+.noAccount {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+}
+
 .buttonContainer {
   display: flex;
   gap: 12px;
@@ -53,6 +62,7 @@
 
 .modal {
   display: flex;
+  position: relative;
   flex-direction: column;
   justify-content: space-between;
   margin-bottom: 200px;
@@ -65,17 +75,26 @@
   animation: slide-down 0.4s ease forwards;
 }
 
-.closeButton {
-  background-color: #ccc;
+.close {
+  position: absolute;
+  right: -24px;
+  top: -24px;
+  cursor: pointer;
+  font-weight: 600;
 }
 
-.closeButton:hover {
-  background-color: black;
+.delete {
+  background-color: #554f4f;
 }
 
 .buttonContainer {
   display: flex;
   flex-direction: column;
+}
+
+.outButtonContainer {
+  display: flex;
+  gap: 12px;
 }
 
 @keyframes slide-down {

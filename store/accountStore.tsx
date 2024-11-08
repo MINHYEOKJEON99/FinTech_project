@@ -1,7 +1,7 @@
 'use client';
 
 import { db } from '@/app/firebase';
-import { get, ref, set, update } from 'firebase/database';
+import { get, ref, remove, set, update } from 'firebase/database';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { LoginContext } from './loginStore';
 
@@ -40,6 +40,8 @@ interface stateType {
   }) => void;
 
   remit: (remitAccount: string, remitMoney: number) => void;
+
+  deleteAccount: (accountNumber: string) => void;
 }
 
 type Account = {
@@ -64,6 +66,7 @@ export const AccountContext = createContext<stateType>({
   addAccount: () => console.log('add'),
   expense: () => console.log('pay'),
   remit: () => console.log('remit'),
+  deleteAccount: () => console.log('delete'),
 });
 
 export default function AccountStore({ children }: LoginStoreProps) {
@@ -74,7 +77,7 @@ export default function AccountStore({ children }: LoginStoreProps) {
   useEffect(() => {
     const fetchAccounts = async () => {
       if (userKey && userInfo.account) {
-        setAccount(userInfo.account);
+        setAccount(Object.values(userInfo.account));
       }
     };
 
@@ -100,15 +103,11 @@ export default function AccountStore({ children }: LoginStoreProps) {
     accountNumber: string;
     balance: number;
   }) {
-    if (account.length) {
-      update(ref(db, `users/${userKey}`), {
-        account: [...account, updatedAccounts],
-      });
-    } else {
-      set(ref(db, `users/${userKey}`), {
-        account: [updatedAccounts],
-      });
-    }
+    const accountKey = updatedAccounts.accountNumber;
+
+    update(ref(db, `users/${userKey}/account`), {
+      [accountKey]: updatedAccounts,
+    });
   }
 
   //송금하기 함수 (계좌 잔고 업데이트)
@@ -116,42 +115,12 @@ export default function AccountStore({ children }: LoginStoreProps) {
     accountNumber: string;
     balance: number;
   }) {
-    const updatedAccountList = account.map(
-      (acc: { accountNumber: string; balance: number }) =>
-        acc.accountNumber === updatedAccount.accountNumber
-          ? { ...acc, balance: updatedAccount.balance } // 기존 accountNumber가 같다면 balance만 업데이트
-          : acc
+    update(
+      ref(db, `users/${userKey}/account/${updatedAccount.accountNumber}`),
+      {
+        ...updatedAccount,
+      }
     );
-
-    update(ref(db, `users/${userKey}`), {
-      account: updatedAccountList,
-    });
-  }
-
-  //결제하기
-  function expense(updatedAccount: {
-    accountNumber: string;
-    balance: number;
-    expenseDetails: {
-      category: string;
-      amount: string;
-      expenditureDate: string;
-    };
-  }) {
-    const updatedAccountList = account.map(
-      (acc: { accountNumber: string; balance: number }) =>
-        acc.accountNumber === updatedAccount.accountNumber
-          ? {
-              ...acc,
-              balance: updatedAccount.balance,
-              expenseDetails: updatedAccount.expenseDetails,
-            } // 기존 accountNumber가 같다면 balance만 업데이트
-          : acc
-    );
-
-    update(ref(db, `users/${userKey}`), {
-      account: updatedAccountList,
-    });
   }
 
   //송금하기 함수 (송금받는 계좌 업데이트)
@@ -184,13 +153,53 @@ export default function AccountStore({ children }: LoginStoreProps) {
     }
 
     if (remittance.remitUserkey) {
-      update(ref(db, `users/${remittance.remitUserkey}`), {
-        account: {
+      update(
+        ref(
+          db,
+          `users/${remittance.remitUserkey}/account/${remittance.accountNumber}`
+        ),
+        {
           accountNumber: remittance.accountNumber,
           balance: remittance.balance + remitMoney,
-        },
-      });
+        }
+      );
     }
+  }
+
+  //결제하기
+  function expense(updatedAccount: {
+    accountNumber: string;
+    balance: number;
+    expenseDetails: {
+      category: string;
+      amount: string;
+      expenditureDate: string;
+    };
+  }) {
+    update(
+      ref(db, `users/${userKey}/account/${updatedAccount.accountNumber}`),
+      {
+        accountNumber: updatedAccount.accountNumber,
+        balance: updatedAccount.balance,
+      }
+    );
+    update(
+      ref(
+        db,
+        `users/${userKey}/account/${updatedAccount.accountNumber}/expenseDetails`
+      ),
+      {
+        [updatedAccount.expenseDetails.expenditureDate]: {
+          amount: updatedAccount.expenseDetails.amount,
+          category: updatedAccount.expenseDetails.category,
+        },
+      }
+    );
+  }
+
+  //계좌 삭제
+  function deleteAccount(accountNumber: string) {
+    remove(ref(db, `users/${userKey}/account/${accountNumber}`));
   }
 
   const accountStore: stateType = {
@@ -199,6 +208,7 @@ export default function AccountStore({ children }: LoginStoreProps) {
     addAccount,
     expense,
     remit,
+    deleteAccount,
   };
 
   return (
