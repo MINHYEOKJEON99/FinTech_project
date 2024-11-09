@@ -38,8 +38,9 @@ export default function Payment() {
     const day = String(now.getDate()).padStart(2, '0');
     const hour = String(now.getHours()).padStart(2, '0');
     const minute = String(now.getMinutes()).padStart(2, '0');
+    const second = String(now.getSeconds()).padStart(2, '0');
 
-    return `${year}-${month}-${day} ${hour}시${minute}분`;
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
   };
 
   //사이드 이펙트
@@ -101,16 +102,20 @@ export default function Payment() {
   };
   const onConfirm = () => {
     const now = getCurrentTimeString();
+    const key = new Date().toString();
 
-    expense({
-      ...currentAccount,
-      balance: currentAccount.balance - Number(remitMoney),
-      expenseDetails: {
-        category,
-        amount: remitMoney,
-        expenditureDate: now,
+    expense(
+      {
+        ...currentAccount,
+        balance: currentAccount.balance - Number(remitMoney),
+        expenseDetails: {
+          category,
+          amount: remitMoney,
+          expenditureDate: now,
+        },
       },
-    });
+      key
+    );
 
     setVisibleModal({
       ...visibleModal,

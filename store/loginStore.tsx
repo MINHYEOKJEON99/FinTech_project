@@ -3,6 +3,7 @@ import app, { db } from '@/app/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { get, onValue, ref, update } from 'firebase/database';
 import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { createContext, useEffect, useState } from 'react';
 
 interface LoginStoreProps {
@@ -52,7 +53,7 @@ export default function LoginStore({ children }: LoginStoreProps) {
   });
 
   const { data: session } = useSession();
-  console.log(session);
+  const router = useRouter();
 
   const sessionExpirationTime = 30 * 60 * 1000;
 
@@ -76,6 +77,7 @@ export default function LoginStore({ children }: LoginStoreProps) {
           signOut({ redirect: false, callbackUrl: '/' });
           setLoginState(false);
           alert('세션이 만료되어 로그아웃되었습니다.');
+          router.push('/  ');
         }, sessionExpirationTime);
 
         return () => clearTimeout(logoutTimer);

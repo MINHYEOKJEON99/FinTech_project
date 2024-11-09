@@ -29,15 +29,18 @@ interface stateType {
     balance: number;
   }) => void;
 
-  expense: (account: {
-    accountNumber: string;
-    balance: number;
-    expenseDetails: {
-      category: string;
-      amount: string;
-      expenditureDate: string;
-    };
-  }) => void;
+  expense: (
+    account: {
+      accountNumber: string;
+      balance: number;
+      expenseDetails: {
+        category: string;
+        amount: string;
+        expenditureDate: string;
+      };
+    },
+    key: string
+  ) => void;
 
   remit: (remitAccount: string, remitMoney: number) => void;
 
@@ -167,15 +170,18 @@ export default function AccountStore({ children }: LoginStoreProps) {
   }
 
   //결제하기
-  function expense(updatedAccount: {
-    accountNumber: string;
-    balance: number;
-    expenseDetails: {
-      category: string;
-      amount: string;
-      expenditureDate: string;
-    };
-  }) {
+  function expense(
+    updatedAccount: {
+      accountNumber: string;
+      balance: number;
+      expenseDetails: {
+        category: string;
+        amount: string;
+        expenditureDate: string;
+      };
+    },
+    key: string
+  ) {
     update(
       ref(db, `users/${userKey}/account/${updatedAccount.accountNumber}`),
       {
@@ -189,9 +195,10 @@ export default function AccountStore({ children }: LoginStoreProps) {
         `users/${userKey}/account/${updatedAccount.accountNumber}/expenseDetails`
       ),
       {
-        [updatedAccount.expenseDetails.expenditureDate]: {
+        [key]: {
           amount: updatedAccount.expenseDetails.amount,
           category: updatedAccount.expenseDetails.category,
+          expenditureDate: updatedAccount.expenseDetails.expenditureDate,
         },
       }
     );
