@@ -5,7 +5,7 @@ import { get, ref, remove, set, update } from 'firebase/database';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { LoginContext } from './loginStore';
 
-interface LoginStoreProps {
+interface accountStoreProps {
   children: React.ReactNode; // children의 타입을 명시적으로 정의
 }
 
@@ -72,7 +72,7 @@ export const AccountContext = createContext<stateType>({
   deleteAccount: () => console.log('delete'),
 });
 
-export default function AccountStore({ children }: LoginStoreProps) {
+export default function AccountStore({ children }: accountStoreProps) {
   const { userKey, userInfo } = useContext(LoginContext);
   const [account, setAccount] = useState<Account[]>([]);
   const [users, setUsers] = useState<Users>({});

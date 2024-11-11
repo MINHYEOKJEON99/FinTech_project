@@ -12,7 +12,7 @@ export default async function Home() {
             <h2 className={styles.title}>
               간편한 금융 서비스를<p>이용하세요</p>
             </h2>
-            <Link href={'/login'}>
+            <Link href={'/manageAccount'}>
               <Button type="button">이용하기</Button>
             </Link>
           </div>

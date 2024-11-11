@@ -10,7 +10,6 @@ import { LoginContext } from '@/store/loginStore';
 export default function Nav() {
   const auth = getAuth(app);
   const { loginState, logout } = useContext(LoginContext);
-  console.log(loginState);
 
   const onClickLogOut = async () => {
     logout();

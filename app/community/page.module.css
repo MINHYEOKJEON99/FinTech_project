@@ -1,0 +1,29 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  width: 70%;
+  min-width: 576px;
+}
+
+.header > button {
+  position: absolute;
+  right: 0;
+}
+
+.pagenation {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0;
+  font-weight: 700;
+  color: #8a8a8a;
+  cursor: pointer;
+}
