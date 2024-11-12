@@ -102,13 +102,13 @@ export default function AccountStore({ children }: accountStoreProps) {
   }, [account]);
 
   //계좌생성
-  function addAccount(updatedAccounts: {
+  async function addAccount(updatedAccounts: {
     accountNumber: string;
     balance: number;
   }) {
     const accountKey = updatedAccounts.accountNumber;
 
-    update(ref(db, `users/${userKey}/account`), {
+    await update(ref(db, `users/${userKey}/account`), {
       [accountKey]: updatedAccounts,
     });
   }
@@ -127,7 +127,7 @@ export default function AccountStore({ children }: accountStoreProps) {
   }
 
   //송금하기 함수 (송금받는 계좌 업데이트)
-  function remit(remitAccount: string, remitMoney: number) {
+  async function remit(remitAccount: string, remitMoney: number) {
     const arr = Object.keys(users);
     let remittance = {
       remitUserkey: '',
@@ -156,7 +156,7 @@ export default function AccountStore({ children }: accountStoreProps) {
     }
 
     if (remittance.remitUserkey) {
-      update(
+      await update(
         ref(
           db,
           `users/${remittance.remitUserkey}/account/${remittance.accountNumber}`
@@ -205,8 +205,8 @@ export default function AccountStore({ children }: accountStoreProps) {
   }
 
   //계좌 삭제
-  function deleteAccount(accountNumber: string) {
-    remove(ref(db, `users/${userKey}/account/${accountNumber}`));
+  async function deleteAccount(accountNumber: string) {
+    await remove(ref(db, `users/${userKey}/account/${accountNumber}`));
   }
 
   const accountStore: stateType = {

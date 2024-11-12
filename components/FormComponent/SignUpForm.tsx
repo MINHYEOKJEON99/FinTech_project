@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { ref, set } from 'firebase/database';
 import app, { db } from '../../app/firebase';
@@ -8,13 +8,14 @@ import clsx from 'clsx';
 import styles from './SignUpForm.module.css';
 import Button from '@/components/UI/Button';
 import { useRouter } from 'next/navigation';
+import { LoginContext } from '@/store/loginStore';
 
 export default function SignUpForm() {
   // prettier-ignore
   const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 
   const auth = getAuth(app);
-
+  const { logout } = useContext(LoginContext);
   const router = useRouter();
   const [userInfo, setUserInfo] = useState({
     email: '',
@@ -62,7 +63,12 @@ export default function SignUpForm() {
         birth,
         nickname,
       });
-      router.push('/login');
+
+      setTimeout(() => {
+        alert('회원가입이 완료되었습니다.');
+        logout();
+        router.push('/login');
+      }, 100);
     } catch (error) {
       console.error(error);
     }

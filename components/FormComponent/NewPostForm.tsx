@@ -33,14 +33,14 @@ export default function NewPostForm() {
     setPost({ ...post, [e.target.name]: e.target.value });
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (post.title.trim() === '' || post.content.trim() === '') {
       return;
     }
 
     try {
-      addPost(post);
+      await addPost(post);
       alert('게시글이 작성 되었습니다');
       router.push('/community');
     } catch (e) {

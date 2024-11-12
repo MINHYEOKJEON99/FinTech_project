@@ -80,7 +80,7 @@ export default function PostStore({ children }: postStoreProps) {
     const lastId = lastIdSnapshot.exists() ? lastIdSnapshot.val() : 0;
 
     const newId = lastId + 1;
-    update(ref(db, `post`), {
+    await update(ref(db, `post`), {
       [newId]: {
         id: newId,
         title: post.title,
@@ -90,7 +90,7 @@ export default function PostStore({ children }: postStoreProps) {
       },
     });
 
-    set(lastPostIdRef, newId);
+    await set(lastPostIdRef, newId);
   };
 
   const deletePost = (id: string) => {

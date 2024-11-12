@@ -42,7 +42,7 @@ export default function AccountRegisterForm() {
     }
 
     try {
-      addAccount(newAccount);
+      await addAccount(newAccount);
 
       router.push('/');
       alert('계좌가 등록되었습니다');

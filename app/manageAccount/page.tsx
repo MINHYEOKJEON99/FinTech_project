@@ -50,14 +50,14 @@ export default function ManageAccount() {
     router.push(`/accountCharge`);
   };
 
-  const onDelete = () => {
+  const onDelete = async () => {
     const deleteValid = confirm('삭제하시겠습니까?');
 
     if (deleteValid) {
       try {
-        deleteAccount(currentAccount.accountNumber);
-        alert('삭제되었습니다.');
-        setVisible(false);
+        await deleteAccount(currentAccount.accountNumber);
+        await alert('삭제되었습니다.');
+        await setVisible(false);
       } catch (e) {
         console.log(e);
       }

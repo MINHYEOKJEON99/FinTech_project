@@ -90,9 +90,9 @@ export default function RemittanceForm() {
   const onCheck = () => {
     setVisibleModal({ ...visibleModal, confirm: false, secondPassword: true });
   };
-  const onConfirm = () => {
-    remit(accountNumber.trim(), +remitMoney);
-    updateAccount({
+  const onConfirm = async () => {
+    await remit(accountNumber.trim(), +remitMoney);
+    await updateAccount({
       ...currentAccount,
       balance: currentAccount.balance - Number(remitMoney),
     });
