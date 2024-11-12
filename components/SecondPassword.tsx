@@ -63,8 +63,8 @@ export default function SecondPassword({
     }
   }, [password]);
 
-  let content = <div className={styles.circle}></div>;
-  let title =
+  const content = <div className={styles.circle}></div>;
+  const title =
     mode === 'confirm'
       ? '2차 비밀번호를 입력하세요.'
       : '2차 비밀번호를 설정해주세요.';

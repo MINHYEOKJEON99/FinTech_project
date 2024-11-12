@@ -24,7 +24,7 @@ export default function PostListContainer() {
   const totalPages = Math.ceil(posts.length / postsPerPage);
 
   useEffect(() => {
-    let arr = [];
+    const arr = [];
     for (let i = 0; i < totalPages; i++) {
       arr.push(i + 1);
     }

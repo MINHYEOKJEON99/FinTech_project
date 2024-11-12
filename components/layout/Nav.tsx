@@ -2,13 +2,10 @@
 
 import Link from 'next/link';
 import styles from './Nav.module.css';
-import app from '@/app/firebase';
-import { getAuth } from 'firebase/auth';
 import { useContext } from 'react';
 import { LoginContext } from '@/store/loginStore';
 
 export default function Nav() {
-  const auth = getAuth(app);
   const { loginState, logout } = useContext(LoginContext);
 
   const onClickLogOut = async () => {

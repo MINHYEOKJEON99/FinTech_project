@@ -1,7 +1,6 @@
 'use client';
 import clsx from 'clsx';
 import classes from './Button.module.css';
-import { useRouter } from 'next/navigation';
 
 interface ButtonParameter {
   styles?: string;

@@ -29,7 +29,6 @@ export default function ExpenseForm() {
     account: false,
   });
   const [type, setType] = useState('all');
-  const [filterList, setFilterList] = useState();
   const [currentAccount, setCurrentAccount] = useState<accountType>({
     accountNumber: '',
     balance: 0,
@@ -57,7 +56,7 @@ export default function ExpenseForm() {
     setType(category);
   };
 
-  let content = currentAccount.expenseDetails
+  const content = currentAccount.expenseDetails
     ? Object.values(currentAccount.expenseDetails)
         .filter((el) => {
           if (type !== 'all') {
