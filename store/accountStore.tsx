@@ -114,11 +114,11 @@ export default function AccountStore({ children }: accountStoreProps) {
   }
 
   //송금하기 함수 (계좌 잔고 업데이트)
-  function updateAccount(updatedAccount: {
+  async function updateAccount(updatedAccount: {
     accountNumber: string;
     balance: number;
   }) {
-    update(
+    await update(
       ref(db, `users/${userKey}/account/${updatedAccount.accountNumber}`),
       {
         ...updatedAccount,
