@@ -130,7 +130,7 @@ export default function LoginStore({ children }: LoginStoreProps) {
     userKey,
     userInfo,
     logout: async () => {
-      auth.signOut();
+      await auth.signOut();
       await signOut({ redirect: true, callbackUrl: '/' });
       alert('로그아웃 되었습니다.');
     },

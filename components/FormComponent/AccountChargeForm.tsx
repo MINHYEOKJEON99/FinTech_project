@@ -125,14 +125,12 @@ export default function AccountChargeForm() {
           className={styles.modalBackground}
           onClick={onClickModal.bind(null, 'confirm')}
         >
-          <div className={styles.submitModal}>
+          <form onSubmit={confirmHandler} className={styles.submitModal}>
             <p>충전하려는 계좌번호와 금액을 확인해주세요</p>
             <p>계좌번호 : {currentAccount.accountNumber}</p>
             <p>충전 후 금액 : {newAccount.balance} (원)</p>
-            <Button onClickHandler={confirmHandler} type="submit">
-              확인
-            </Button>
-          </div>
+            <Button type="submit">확인</Button>
+          </form>
         </div>
       )}
     </>
