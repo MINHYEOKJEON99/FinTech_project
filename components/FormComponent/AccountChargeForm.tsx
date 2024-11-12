@@ -74,7 +74,9 @@ export default function AccountChargeForm() {
     setVisibleModal({ ...visibleModal, confirm: true });
   };
 
-  const confirmHandler = async () => {
+  const confirmHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     try {
       updateAccount(newAccount);
 
