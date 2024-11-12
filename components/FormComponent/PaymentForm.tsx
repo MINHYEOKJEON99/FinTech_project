@@ -100,30 +100,33 @@ export default function PaymentForm() {
   const onCheck = () => {
     setVisibleModal({ ...visibleModal, confirm: false, secondPassword: true });
   };
-  const onConfirm = () => {
+  const onConfirm = async () => {
     const now = getCurrentTimeString();
     const key = new Date().toString();
 
-    expense(
-      {
-        ...currentAccount,
-        balance: currentAccount.balance - Number(remitMoney),
-        expenseDetails: {
-          category,
-          amount: remitMoney,
-          expenditureDate: now,
+    try {
+      await expense(
+        {
+          ...currentAccount,
+          balance: currentAccount.balance - Number(remitMoney),
+          expenseDetails: {
+            category,
+            amount: remitMoney,
+            expenditureDate: now,
+          },
         },
-      },
-      key
-    );
+        key
+      );
+      setVisibleModal({
+        ...visibleModal,
+        secondPassword: false,
+        remitComplete: true,
+      });
 
-    setVisibleModal({
-      ...visibleModal,
-      secondPassword: false,
-      remitComplete: true,
-    });
-
-    setRemitMoney('');
+      setRemitMoney('');
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const onCloseSecondPw = () => {

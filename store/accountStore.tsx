@@ -170,7 +170,7 @@ export default function AccountStore({ children }: accountStoreProps) {
   }
 
   //결제하기
-  function expense(
+  async function expense(
     updatedAccount: {
       accountNumber: string;
       balance: number;
@@ -182,14 +182,14 @@ export default function AccountStore({ children }: accountStoreProps) {
     },
     key: string
   ) {
-    update(
+    await update(
       ref(db, `users/${userKey}/account/${updatedAccount.accountNumber}`),
       {
         accountNumber: updatedAccount.accountNumber,
         balance: updatedAccount.balance,
       }
     );
-    update(
+    await update(
       ref(
         db,
         `users/${userKey}/account/${updatedAccount.accountNumber}/expenseDetails`
