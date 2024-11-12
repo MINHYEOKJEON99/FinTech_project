@@ -120,7 +120,7 @@ export default function LoginStore({ children }: LoginStoreProps) {
   }, [userKey, secondPassword, userInfo]);
 
   const addSecondPassword = async (secondPw: string) => {
-    update(ref(db, `users/${userKey}`), {
+    await update(ref(db, `users/${userKey}`), {
       secondPassword: secondPw,
     });
   };

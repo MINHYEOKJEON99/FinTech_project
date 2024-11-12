@@ -30,37 +30,41 @@ export default function SecondPassword({
   };
 
   useEffect(() => {
-    if (password.length === 6 && mode === 'set') {
-      try {
-        setPassword('');
+    async function passwordConfirm() {
+      if (password.length === 6 && mode === 'set') {
+        try {
+          await setPassword('');
 
-        if (KEY) {
-          addSecondPassword(HmacSHA256(password, KEY).toString());
-        } else {
-          console.error('Secret key is undefined.');
-        }
+          if (KEY) {
+            await addSecondPassword(HmacSHA256(password, KEY).toString());
+          } else {
+            console.error('Secret key is undefined.');
+          }
 
-        onClose();
-        alert('비밀번호 설정이 완료되었습니다.');
-      } catch (e) {
-        console.log(e);
-      }
-    } else if (password.length === 6 && mode === 'confirm') {
-      try {
-        if (KEY && secondPassword === HmacSHA256(password, KEY).toString()) {
-          alert('2차 비밀번호 인증 완료');
-          onConfirm();
-        } else if (
-          KEY &&
-          secondPassword !== HmacSHA256(password, KEY).toString()
-        ) {
-          alert('2차 비밀번호가 틀렸습니다.');
-          setPassword('');
+          await onClose();
+          alert('비밀번호 설정이 완료되었습니다.');
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.log(e);
+      } else if (password.length === 6 && mode === 'confirm') {
+        try {
+          if (KEY && secondPassword === HmacSHA256(password, KEY).toString()) {
+            alert('2차 비밀번호 인증 완료');
+            await onConfirm();
+          } else if (
+            KEY &&
+            secondPassword !== HmacSHA256(password, KEY).toString()
+          ) {
+            alert('2차 비밀번호가 틀렸습니다.');
+            setPassword('');
+          }
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
+
+    passwordConfirm();
   }, [password]);
 
   const content = <div className={styles.circle}></div>;
