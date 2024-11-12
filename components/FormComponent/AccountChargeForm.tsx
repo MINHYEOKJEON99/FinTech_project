@@ -74,14 +74,14 @@ export default function AccountChargeForm() {
     setVisibleModal({ ...visibleModal, confirm: true });
   };
 
-  const confirmHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const confirmHandler = async () => {
     try {
       updateAccount(newAccount);
-
-      router.push('/');
       alert('잔액이 충전되었습니다');
+
+      setTimeout(() => {
+        router.push('/');
+      }, 100);
     } catch (e) {
       console.log(e);
     }
@@ -127,12 +127,14 @@ export default function AccountChargeForm() {
           className={styles.modalBackground}
           onClick={onClickModal.bind(null, 'confirm')}
         >
-          <form onSubmit={confirmHandler} className={styles.submitModal}>
+          <div className={styles.submitModal}>
             <p>충전하려는 계좌번호와 금액을 확인해주세요</p>
             <p>계좌번호 : {currentAccount.accountNumber}</p>
             <p>충전 후 금액 : {newAccount.balance} (원)</p>
-            <Button type="submit">확인</Button>
-          </form>
+            <Button onClickHandler={confirmHandler} type="submit">
+              확인
+            </Button>
+          </div>
         </div>
       )}
     </>
