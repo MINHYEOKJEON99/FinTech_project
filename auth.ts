@@ -18,7 +18,6 @@ export const {
     //로그인 함수
     async signIn({ user, profile }) {
       const { nickname, birthday, birthyear, id }: any = profile?.response; // profile.response를 사용하여 필요한 정보 가져오기
-      console.log(user, profile);
 
       // 로그인 시 닉네임과 생년월일 데이터베이스에 추가
       const res = await fetch(

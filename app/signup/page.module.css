@@ -4,35 +4,3 @@
   justify-content: center;
   align-items: center;
 }
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 50%;
-  gap: 24px;
-  margin-top: 48px;
-}
-
-.input {
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  height: 48px;
-  width: 100%;
-
-  padding-left: 8px;
-}
-
-.inValidInput {
-  background-color: rgb(253, 225, 225);
-  border: 2px solid rgb(250, 172, 172);
-}
-
-.input:focus {
-  outline: none;
-}
-
-.button {
-  height: 48px;
-  width: 50%;
-  margin: 0 auto;
-}

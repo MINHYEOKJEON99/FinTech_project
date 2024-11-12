@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  width: 640px;
+  height: 360px;
+  border-radius: 16px;
+  background-color: #fff;
+  padding: 16px;
+  margin-top: 60px;
+}
+
+.loginForm {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input {
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  height: 36px;
+  padding-left: 8px;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.img {
+  flex: 1;
+}
+
+.signupButton {
+  background-color: #ccc;
+}
+
+.signupButton:hover {
+  background-color: black;
+}
+
+.naver {
+  background-image: url('../../public/naverButton.png');
+  height: 60px;
+  width: 224px;
+  border: none;
+  margin: auto;
+  overflow: hidden;
+  cursor: pointer;
+  background-size: contain;
+  background-repeat: no-repeat;
+}

@@ -60,7 +60,6 @@ export default function ManageAccount() {
         setVisible(false);
       } catch (e) {
         console.log(e);
-        console.log(currentAccount.accountNumber);
       }
     }
   };
